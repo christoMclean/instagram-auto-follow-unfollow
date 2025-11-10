@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Instagram Auto Follow/Unfollow Input Schema",
+  "type": "object",
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": ["follow", "unfollow", "both"]
+    },
+    "targets": {
+      "type": "object",
+      "properties": {
+        "usernames": { "type": "array", "items": { "type": "string" } },
+        "hashtags": { "type": "array", "items": { "type": "string" } },
+        "locations": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false,
+      "required": ["usernames", "hashtags", "locations"]
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "max_actions": { "type": "integer", "minimum": 1, "maximum": 500 }
+      },
+      "required": ["max_actions"],
+      "additionalProperties": false
+    },
+    "unfollow": {
+      "type": "object",
+      "properties": {
+        "usernames": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false,
+      "required": ["usernames"]
+    }
+  },
+  "required": ["mode", "targets", "limits", "unfollow"],
+  "additionalProperties": false
+}
