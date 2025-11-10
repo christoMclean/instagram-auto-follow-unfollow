@@ -1,0 +1,57 @@
+time.sleep(dur)
+
+class Targets(BaseModel):
+    usernames: List[str] = Field(default_factory=list)
+    hashtags: List[str] = Field(default_factory=list)
+    locations: List[str] = Field(default_factory=list)
+
+class Limits(BaseModel):
+    max_actions: int = 20
+
+class Unfollow(BaseModel):
+    usernames: List[str] = Field(default_factory=list)
+
+class InputConfig(BaseModel):
+    mode: str = Field(default="follow", pattern="^(follow|unfollow|both)$")
+    targets: Targets = Field(default_factory=Targets)
+    limits: Limits = Field(default_factory=Limits)
+    unfollow: Unfollow = Field(default_factory=Unfollow)
+
+@dataclass
+class DelayConfig:
+    min_ms: int = 1200
+    max_ms: int = 2800
+
+@dataclass
+class AppConfig:
+    headless: bool = True
+    simulate: bool = True
+    proxy: Optional[str] = None
+    discovery_per_hashtag: int = 3
+    discovery_per_location: int = 2
+    delay: DelayConfig = DelayConfig()
+    credentials_user: Optional[str] = None
+    credentials_pass: Optional[str] = None
+
+def load_app_config(path: Path) -> AppConfig:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    delay = data.get("delay", {})
+    return AppConfig(
+        headless=bool(data.get("headless", True)),
+        simulate=bool(data.get("simulate", True)),
+        proxy=data.get("proxy"),
+        discovery_per_hashtag=int(data.get("discovery_per_hashtag", 3)),
+        discovery_per_location=int(data.get("discovery_per_location", 2)),
+        delay=DelayConfig(int(delay.get("min_ms", 1200)), int(delay.get("max_ms", 2800))),
+        credentials_user=data.get("credentials", {}).get("username"),
+        credentials_pass=data.get("credentials", {}).get("password"),
+    )
+
+def load_input_config(path: Path) -> InputConfig:
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return InputConfig(**data)
+
+def validate_config_against_schema(input_path: Path, schema_path: Path):
+    instance = json.loads(input_path.read_text(encoding="utf-8"))
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    validate(instance=instance, schema=schema)
