@@ -1,0 +1,12 @@
+{
+  "headless": true,
+  "simulate": true,
+  "proxy": null,
+  "discovery_per_hashtag": 3,
+  "discovery_per_location": 2,
+  "delay": { "min_ms": 1200, "max_ms": 2400 },
+  "credentials": {
+    "username": null,
+    "password": null
+  }
+}
