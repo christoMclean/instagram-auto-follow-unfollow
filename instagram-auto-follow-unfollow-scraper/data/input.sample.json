@@ -1,0 +1,10 @@
+{
+  "mode": "both",
+  "targets": {
+    "usernames": ["fashion.trends24", "street.style.hub"],
+    "hashtags": ["streetstyle", "minimaloutfits"],
+    "locations": ["nyc", "london"]
+  },
+  "limits": { "max_actions": 6 },
+  "unfollow": { "usernames": [] }
+}
